@@ -14,7 +14,7 @@ public class platform {
         ArrayList<String> background = new ArrayList<>();
         int bgWidth = 10;
         int bgHeight = 20;
-        int[] lilGuy = { 5, (bgHeight-2)-5 };
+        int[] lilGuy = { 5, (bgHeight - 2) - 5 };
         int fall = 1;
         int jump = 0;
         int movement = 0;
@@ -25,9 +25,9 @@ public class platform {
 
         String keptKey = null;
 
-        int c = 0;
+        int tickCount = 0;
         while (true) {
-            c++;
+            tickCount++;
             // movement = 0;
 
             if (!GlobalListenerExample.keyKeeper.processed) {
@@ -55,7 +55,7 @@ public class platform {
                 GlobalListenerExample.keyKeeper.processed = true;
             }
 
-            if (c % 5 == 0) {
+            if (tickCount % 5 == 0) {
 
                 resetBackground(background, bgWidth, bgHeight);
 
@@ -77,14 +77,21 @@ public class platform {
                         if (background.get(lilGuy[0] + (bgWidth * (lilGuy[1] - fall))).equals(tiles.air)) {
                             lilGuy[1] -= (fall);
 
-                        } else if (!background.get(lilGuy[0] + (bgWidth * (lilGuy[1] - 1))).equals(tiles.air)) {
-                            jump = 0;
                         } else {
+                            jump = 0;
                             airBorne = false;
                         }
                     jump--;
-                }
+                } else if (background.get(lilGuy[0] + (bgWidth * (lilGuy[1] + 1))).equals(tiles.air)) {
+                    airBorne = true;
+                } 
+                // else {jump = -1;}
 
+                
+                // else {
+                //     airBorne = false;
+                //     jump = 0;
+                // }
                 // if (background.get(lilGuy[0] + (10 * (lilGuy[1] + fall))).equals(" ")) {
                 // lilGuy[1] += fall;
                 // }
@@ -120,26 +127,40 @@ public class platform {
     public static void resetBackground(ArrayList<String> background, int bgWidth, int bgHeight) {
         background.clear();
 
+        ///     ROOF    ///
         background.add(tiles.box);
-        for (int i = 0+1; i < (bgWidth-1); i++) {
+        for (int i = 0 + 1; i < bgWidth - 1; i++) {
             background.add(tiles.box);
         }
         background.add(tiles.box);
+        ///     roof    ///
 
-        for (int y = 0+1; y < (bgHeight-1); y++) {
+        for (int y = 0 + 1; y < bgHeight - 1; y++) {
             background.add(tiles.box);
-            // background.add(String.format(" %d ", y));
-            for (int x = 0+1; x < bgWidth-1; x++) {
-                background.add(tiles.air);
+            for (int x = 0 + 1; x < bgWidth - 1; x++) {
+
+                // if (Math.random() < 0.1) {background.add(tiles.box);}
+                // // System.out.println(Math.random());
+                // else {background.add(tiles.air);}
+
+                if (x == 5 &&
+                        y == 16) {
+                    background.add(tiles.box);
+                } else {
+                    background.add(tiles.air);
+                }
+
             }
             background.add(tiles.box);
         }
 
+        ///     FLOOR   ///
         background.add(tiles.box);
-        for (int i = 0+1; i < (bgWidth-1); i++) {
+        for (int i = 0 + 1; i < bgWidth - 1; i++) {
             background.add(tiles.box);
         }
         background.add(tiles.box);
+        ///     floor   ///
 
     }
 }
