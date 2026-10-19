@@ -15,9 +15,9 @@ public class platform {
         int bgWidth = 10;
         int bgHeight = 20;
         int[] lilGuy = { 5, (bgHeight - 2) - 5 };
-        int fall = 1;
-        int jump = 0;
-        int movement = 0;
+        int yMovementDirection = 1;
+        int yMovementSpeed = 0;
+        int xMovementDirection = 0;
 
         boolean airBorne = true;
 
@@ -28,23 +28,23 @@ public class platform {
         int tickCount = 0;
         while (true) {
             tickCount++;
-            // movement = 0;
+            // xMovementDirection = 0;
 
             if (!GlobalListenerExample.keyKeeper.processed) {
                 keptKey = GlobalListenerExample.keyKeeper.key;
                 switch (keptKey) {
                     case "A":
-                        movement = -1;
+                        xMovementDirection = -1;
                         break;
 
                     case "D":
-                        movement = +1;
+                        xMovementDirection = +1;
                         break;
 
                     case "W":
                         if (!airBorne) {
-                            airBorne = true;
-                            jump = +2;
+                            // airBorne = true;
+                            yMovementSpeed = +3;
                         }
                         break;
 
@@ -59,41 +59,47 @@ public class platform {
 
                 resetBackground(background, bgWidth, bgHeight);
 
-                if (background.get(lilGuy[0] + movement + (bgWidth * lilGuy[1])).equals(tiles.air)) {
-                    lilGuy[0] += movement;
+                if (background.get(lilGuy[0] + xMovementDirection + (bgWidth * lilGuy[1])).equals(tiles.air)) {
+                    lilGuy[0] += xMovementDirection;
                 }
-                movement = 0;
+                xMovementDirection = 0;
 
-                // if (jump > 0){
+                // if (yMovementSpeed > 0){
                 // }
-                if (jump != 0) {
-                    fall = (jump / Math.abs(jump));
+                if (yMovementSpeed != 0) {
+                    yMovementDirection = (yMovementSpeed / Math.abs(yMovementSpeed));
                 } else {
-                    fall = 0;
+                    yMovementDirection = 0;
                 }
-
-                if (airBorne) {
-                    for (int j = 0; j < Math.abs(jump); j++)
-                        if (background.get(lilGuy[0] + (bgWidth * (lilGuy[1] - fall))).equals(tiles.air)) {
-                            lilGuy[1] -= (fall);
-
-                        } else {
-                            jump = 0;
-                            airBorne = false;
-                        }
-                    jump--;
-                } else if (background.get(lilGuy[0] + (bgWidth * (lilGuy[1] + 1))).equals(tiles.air)) {
-                    airBorne = true;
-                } 
-                // else {jump = -1;}
 
                 
+                if (airBorne || yMovementDirection > 0) {
+                    for (int j = 0; j < Math.abs(yMovementSpeed); j++)
+                        if (background.get(lilGuy[0] + (bgWidth * (lilGuy[1] - yMovementDirection)))
+                            .equals(tiles.air)) {
+                        lilGuy[1] -= (yMovementDirection);
+                        
+                    } else {
+                            // airBorne = false;
+                            yMovementSpeed = +1;
+                            break;
+                        }
+                        yMovementSpeed--;
+                    }
+                    
+                    if (background.get(lilGuy[0] + (bgWidth * (lilGuy[1] + 1))).equals(tiles.air)) {
+                        airBorne = true;
+                    } else { airBorne = false; }
+
+                // else {yMovementSpeed = -1;}
+
                 // else {
-                //     airBorne = false;
-                //     jump = 0;
+                // airBorne = false;
+                // yMovementSpeed = 0;
                 // }
-                // if (background.get(lilGuy[0] + (10 * (lilGuy[1] + fall))).equals(" ")) {
-                // lilGuy[1] += fall;
+                // if (background.get(lilGuy[0] + (10 * (lilGuy[1] +
+                // yMovementDirection))).equals(" ")) {
+                // lilGuy[1] += yMovementDirection;
                 // }
                 // else {
                 // airBorne = true;
@@ -143,8 +149,7 @@ public class platform {
                 // // System.out.println(Math.random());
                 // else {background.add(tiles.air);}
 
-                if (x == 5 &&
-                        y == 16) {
+                if (x == 5 && y == 13) {
                     background.add(tiles.box);
                 } else {
                     background.add(tiles.air);
